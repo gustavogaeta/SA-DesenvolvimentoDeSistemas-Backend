@@ -15,7 +15,7 @@ Backend do FinTech Flow - Sistema de Tesouraria Integrada desenvolvido com Node.
 - [Testes](#testes)
 - [Deploy](#deploy)
 
-## � Como Funciona em Diferentes Máquinas
+## 🔄 Como Funciona em Diferentes Máquinas
 
 Este repositório é independente do frontend. Para usar em diferentes máquinas:
 
@@ -25,11 +25,50 @@ Este repositório é independente do frontend. Para usar em diferentes máquinas
 4. **Configure suas variáveis**: Edite o `.env` com suas configurações locais (banco, porta, etc.)
 5. **Execute**: `npm run dev`
 
-## �🚀 Tecnologias
+## Configuração Rápida do Ambiente
 
-- **Node.js** - Runtime JavaScript
-- **Express.js** - Framework web
-- **PostgreSQL** - Banco de dados relacional
+### 1. Instalar Dependências
+```bash
+npm install
+```
+
+### 2. Configurar Variáveis de Ambiente
+Copie o arquivo de exemplo:
+```bash
+cp .env.example .env
+```
+
+Edite o arquivo `.env` com suas configurações:
+```env
+PORT=3333
+DATABASE_URL="postgresql://username:password@localhost:5432/fintech_flow?schema=public"
+JWT_SECRET="your-super-secret-jwt-key-change-this-in-production"
+FRONTEND_URL=http://localhost:5173
+```
+
+### 3. Configurar Banco de Dados
+```bash
+# Criar banco PostgreSQL
+CREATE DATABASE fintech_flow;
+
+# Gerar Prisma Client
+npm run prisma:generate
+
+# Executar migrações
+npm run prisma:migrate
+```
+
+### 4. Iniciar o Projeto
+```bash
+npm run dev
+```
+
+## Importante
+
+- O arquivo `.env` nunca deve ser commitado
+- Use o `.env.example` como template
+- Configure as URLs e banco conforme seu ambiente local
+- Backend estará disponível em `http://localhost:3333`
 - **Prisma ORM** - ORM para PostgreSQL
 - **JWT** - Autenticação via JSON Web Tokens
 - **bcrypt** - Hashing de senhas
