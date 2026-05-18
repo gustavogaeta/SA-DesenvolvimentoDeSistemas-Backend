@@ -340,4 +340,4 @@ Contribuições são bem-vindas! Por favor, abra uma issue ou envie um pull requ
 
 ## 📞 Suporte
 
-Para suporte, envie um email para gustavo.gaeta@example.com ou abra uma issue no GitHub.
+Para suporte, envie um email para gustavo.gaeta@example.com ou abra uma issue no repositório do GitHub.
