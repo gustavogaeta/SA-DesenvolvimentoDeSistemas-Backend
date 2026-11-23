@@ -2,6 +2,94 @@
 
 Backend do FinTech Flow - Sistema de Tesouraria Integrada desenvolvido com Node.js, Express, PostgreSQL e Prisma ORM.
 
+## 🚀 Como rodar (backend + frontend) — passo a passo
+
+Os dois projetos são repositórios separados e precisam estar rodando ao mesmo tempo:
+
+- Backend: `SA-DesenvolvimentoDeSistemas-Backend` → http://localhost:3333
+- Frontend: `S.A-Desenvolvimento-de-Sistemas-FrontEnd` → http://localhost:5173
+
+### Pré-requisitos
+- Node.js 18+ e npm
+- PostgreSQL (local ou Neon na nuvem) com um banco criado
+
+### 1. Instale as dependências (um terminal para cada projeto)
+
+```bash
+# Backend
+cd SA-DesenvolvimentoDeSistemas-Backend
+npm install
+
+# Frontend (em outro terminal)
+cd S.A-Desenvolvimento-de-Sistemas-FrontEnd
+npm install
+```
+
+### 2. Configure o `.env` do backend
+
+Copie `.env.example` para `.env` (`copy .env.example .env` no Windows) e ajuste:
+
+```env
+PORT=3333
+NODE_ENV=development
+DATABASE_URL="postgresql://usuario:senha@localhost:5432/fintech_flow?schema=public"
+JWT_SECRET="troque-por-uma-chave-secreta"
+JWT_EXPIRES_IN="7d"
+BCRYPT_SALT_ROUNDS=12
+FRONTEND_URL=http://localhost:5173
+CORS_ORIGIN=http://localhost:5173
+RATE_LIMIT_WINDOW_MS=900000
+RATE_LIMIT_MAX_REQUESTS=100
+```
+
+> Use a URL do seu PostgreSQL. O `.env` não deve ser commitado.
+
+### 3. Configure o `.env` do frontend
+
+Na raiz do frontend, crie/edite o `.env`:
+
+```env
+VITE_API_URL=http://localhost:3333/api
+```
+
+### 4. Prepare o banco de dados (apenas no backend)
+
+```bash
+npm run prisma:generate
+npm run prisma:migrate
+# opcional: npm run prisma:seed
+```
+
+### 5. Suba o backend
+
+```bash
+npm run dev
+```
+
+Confira se está OK:
+- Health check: http://localhost:3333/api/health (deve retornar `{"status":"OK"}`)
+- Swagger: http://localhost:3333/api/docs
+
+### 6. Suba o frontend (outro terminal)
+
+```bash
+npm run dev
+```
+
+Acesse http://localhost:5173. Em `development`, o CORS do backend aceita qualquer origem `localhost`, então não é preciso configurar mais nada.
+
+### 7. Teste a integração
+
+1. No frontend, clique em **Criar conta gratuita**, faça o cadastro e faça login.
+2. No dashboard, clique em **+ Nova transação**, cadastre uma receita e uma despesa.
+3. Confira se os cards de saldo/receitas/despesas e a tabela de transações são atualizados.
+4. Para testar a API diretamente, use o Swagger (`/api/docs`): faça login, copie o token e clique em **Authorize** com `Bearer <token>`.
+
+### Problemas comuns
+- `Database connection failed`: confira `DATABASE_URL` e se o PostgreSQL está acessível.
+- Erro de CORS no navegador: confira `CORS_ORIGIN` no `.env` do backend e reinicie o servidor.
+- Frontend não carrega os dados: confirme `VITE_API_URL` e reinicie o Vite após alterar o `.env`.
+
 ## 📋 Sumário
 
 - [Tecnologias](#tecnologias)
