@@ -14,8 +14,10 @@ app.use(helmet());
 // ─── CORS ─────────────────────────────────────────────────────────────────────
 const corsOptions = {
   origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+
     if (process.env.NODE_ENV === 'development') {
-      if (!origin || origin.match(/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/)) {
+      if (origin.match(/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/)) {
         return callback(null, true);
       }
     }
