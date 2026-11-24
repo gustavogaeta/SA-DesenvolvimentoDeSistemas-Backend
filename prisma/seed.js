@@ -34,39 +34,24 @@ async function main() {
 
   console.log('✅ Test user created:', testUser.email);
 
-  // Criar transações de exemplo para o usuário de teste
-  const transactions = [
-    {
-      title: 'Salário Mensal',
-      amount: 5000.00,
-      type: 'INCOME',
-      createdBy: testUser.id,
-    },
-    {
-      title: 'Aluguel',
-      amount: 1500.00,
-      type: 'EXPENSE',
-      createdBy: testUser.id,
-    },
-    {
-      title: 'Supermercado',
-      amount: 400.50,
-      type: 'EXPENSE',
-      createdBy: testUser.id,
-    },
-    {
-      title: 'Freelance Project',
-      amount: 1200.00,
-      type: 'INCOME',
-      createdBy: testUser.id,
-    },
-    {
-      title: 'Contas de Luz e Água',
-      amount: 200.00,
-      type: 'EXPENSE',
-      createdBy: testUser.id,
-    },
-  ];
+  // Seed idempotente: substitui as transações anteriores do usuário de teste
+  await prisma.transaction.deleteMany({ where: { createdBy: testUser.id } });
+
+  // Transações distribuídas nos últimos 6 meses para alimentar a evolução mensal
+  const now = new Date();
+  const transactions = [];
+  for (let i = 5; i >= 0; i--) {
+    const month = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const at = (day) => new Date(month.getFullYear(), month.getMonth(), day, 12);
+
+    transactions.push(
+      { title: 'Salário Mensal', amount: 5000.00, type: 'INCOME', createdBy: testUser.id, createdAt: at(5) },
+      { title: 'Aluguel', amount: 1500.00, type: 'EXPENSE', createdBy: testUser.id, createdAt: at(8) },
+      { title: 'Supermercado', amount: 400.50, type: 'EXPENSE', createdBy: testUser.id, createdAt: at(12) },
+      { title: 'Freelance Project', amount: 1200.00, type: 'INCOME', createdBy: testUser.id, createdAt: at(16) },
+      { title: 'Contas de Luz e Água', amount: 200.00, type: 'EXPENSE', createdBy: testUser.id, createdAt: at(20) },
+    );
+  }
 
   for (const transaction of transactions) {
     await prisma.transaction.create({
